@@ -1,4 +1,4 @@
-resource "aws_vpc" "hicham_vpc" {
+resource "aws_vpc" "tim_vpc" {
   cidr_block = var.networking.cidr_block
 
   tags = {
@@ -9,7 +9,7 @@ resource "aws_vpc" "hicham_vpc" {
 # PUBLIC SUBNETS
 resource "aws_subnet" "public_subnets" {
   count                   = var.networking.public_subnets == null || var.networking.public_subnets == "" ? 0 : length(var.networking.public_subnets)
-  vpc_id                  = aws_vpc.hicham_vpc.id
+  vpc_id                  = aws_vpc.tim_vpc.id
   cidr_block              = var.networking.public_subnets[count.index]
   availability_zone       = var.networking.azs[count.index]
   map_public_ip_on_launch = true
@@ -22,7 +22,7 @@ resource "aws_subnet" "public_subnets" {
 # PRIVATE SUBNETS
 resource "aws_subnet" "private_subnets" {
   count                   = var.networking.private_subnets == null || var.networking.private_subnets == "" ? 0 : length(var.networking.private_subnets)
-  vpc_id                  = aws_vpc.hicham_vpc.id
+  vpc_id                  = aws_vpc.tim_vpc.id
   cidr_block              = var.networking.private_subnets[count.index]
   availability_zone       = var.networking.azs[count.index]
   map_public_ip_on_launch = false
@@ -34,7 +34,7 @@ resource "aws_subnet" "private_subnets" {
 
 # INTERNET GATEWAY
 resource "aws_internet_gateway" "i_gateway" {
-  vpc_id = aws_vpc.hicham_vpc.id
+  vpc_id = aws_vpc.tim_vpc.id
 
   tags = {
     Name = "i_gateway"
@@ -63,7 +63,7 @@ resource "aws_nat_gateway" "nats" {
 
 # PUBLIC ROUTE TABLE
 resource "aws_route_table" "public_table" {
-  vpc_id = aws_vpc.hicham_vpc.id
+  vpc_id = aws_vpc.tim_vpc.id
 }
 
 resource "aws_route" "public_routes" {
@@ -81,7 +81,7 @@ resource "aws_route_table_association" "assoc_public_routes" {
 # PRIVATE ROUTE TABLES
 resource "aws_route_table" "private_tables" {
   count  = length(var.networking.azs)
-  vpc_id = aws_vpc.hicham_vpc.id
+  vpc_id = aws_vpc.tim_vpc.id
 }
 
 resource "aws_route" "private_routes" {
@@ -102,7 +102,7 @@ resource "aws_security_group" "sec_groups" {
   for_each    = { for sec in var.security_groups : sec.name => sec }
   name        = each.value.name
   description = each.value.description
-  vpc_id      = aws_vpc.hicham_vpc.id
+  vpc_id      = aws_vpc.tim_vpc.id
 
   dynamic "ingress" {
     for_each = try(each.value.ingress, [])

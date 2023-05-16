@@ -11,7 +11,7 @@ variable "networking" {
   default = {
     cidr_block      = "10.0.0.0/16"
     region          = "eu-west-1"
-    vpc_name        = "hicham-vpc"
+    vpc_name        = "tim-vpc"
     azs             = ["eu-west-1a", "eu-west-1b"]
     public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
     private_subnets = ["10.0.3.0/24", "10.0.4.0/24"]
@@ -41,8 +41,8 @@ variable "security_groups" {
     }))
   }))
   default = [{
-    name        = "hicham-security-group"
-    description = "Inbound & Outbound traffic for hicham-security-group"
+    name        = "tim-security-group"
+    description = "Inbound & Outbound traffic for tim-security-group"
     ingress = [
       {
         description      = "Allow HTTPS"
